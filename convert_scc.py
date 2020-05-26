@@ -23,10 +23,11 @@ def make_cfg(input_cfg_file, timecode):
 
 
 def main():
-    json_path = os.path.dirname(os.path.abspath(__file__))+"/media.json"
+    #json_path = os.path.dirname(os.path.abspath(__file__))+"/media.json"
+    json_path = "media.json"
     medias = load_json(json_path)
 
-    path = os.path.dirname(os.path.abspath(__file__))+"/input/"
+    path = "input/"
     files = os.listdir(path)
 
     for file in files:
