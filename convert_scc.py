@@ -22,14 +22,30 @@ def make_cfg(input_cfg_file, timecode):
     with open("ez_output.cfg", "w") as file:
         file.write(replaced)
 
-
-def main():
-    print("main is called")
+def process(input, output):
     json_path = "media.json"
     medias = load_json(json_path)
+    path = input
+    files = os.listdir(path)
+    for file in files:
+       _, filename = os.path.split(file)
+       title, ext = os.path.splitext(filename)
+       asset_id = title.replace("_ENG", "")
+       for media in medias["media"]:
+           if asset_id == media["asset_id"]:
+                json_timecode = media["tc_in"]
+                make_cfg("ez_input.cfg",json_timecode)
+                cfg_path = "ez_output.cfg"
+                output_filename = title + ext
+                output_path = os.path.join(output, output_filename)
+                command = "ezc5c -c {} -i scc -o scc {} {}".format(
+                    cfg_path, filename, output_path)
+                print(command)
+                os.system(command)
 
+def main():  
     ap = argparse.ArgumentParser(
-        description='Process Moonbug jobs',
+        description='SCC converting jobs',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
@@ -47,25 +63,10 @@ def main():
 
     args = ap.parse_args()
 
-    path = args.input_dir
-    files = os.listdir(path)
+    process(args.input_dir, args.output_dir)
 
-    for file in files:
-       _, filename = os.path.split(file)
-       title, ext = os.path.splitext(filename)
-       asset_id = title.replace("_ENG", "")
-       for media in medias["media"]:
-           if asset_id == media["asset_id"]:
-                json_timecode = media["tc_in"]
-                make_cfg("ez_input.cfg",json_timecode)
-                cfg_path = "ez_output.cfg"
-                output_filename = title + ext
-                output_path = os.path.join(args.output_dir, output_filename)
-                command = "ezc5c -c {} -i scc -o scc {} {}".format(
-                    cfg_path, filename, output_path)
-                print(command)
-                os.system(command)
-
-if __name__ == "__main___":
+if __name__ == "__main__":
+    print("main")
     main()
             
+print("out of main")

@@ -1,0 +1,5 @@
+media.json
+*.cfg
+input
+output
+*.pyc
