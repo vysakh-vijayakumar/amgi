@@ -2,6 +2,7 @@ import re
 import sys
 import os
 import json
+import argparse
 
 def load_json(filename):
     with open(filename) as file:
@@ -23,11 +24,31 @@ def make_cfg(input_cfg_file, timecode):
 
 
 def main():
+    print("main is called")
     #json_path = os.path.dirname(os.path.abspath(__file__))+"/media.json"
     json_path = "media.json"
     medias = load_json(json_path)
 
-    path = "input/"
+    ap = argparse.ArgumentParser(
+        description='Process Moonbug jobs',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    ap.add_argument(
+        '-i', '--input',
+        help='input directory',
+        dest='input_dir',
+        required=True)
+
+    ap.add_argument(
+        '-o', '--output',
+        help='output directory',
+        dest='output_dir',
+        required=True)
+
+    args = ap.parse_args()
+
+    path = args.input_dir
     files = os.listdir(path)
 
     for file in files:
@@ -40,11 +61,12 @@ def main():
                 make_cfg("ez_input.cfg",json_timecode)
                 cfg_path = "ez_output.cfg"
                 output_filename = title + ext
-                output_path = os.path.join("output/", output_filename)
+                output_path = os.path.join(args.output_dir, output_filename)
                 command = "ezc5c -c {} -i scc -o scc {} {}".format(
                     cfg_path, filename, output_path)
                 print(command)
                 os.system(command)
 
-main()
+if __name__ == "__main___":
+    main()
             
