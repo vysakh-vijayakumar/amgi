@@ -25,7 +25,6 @@ def make_cfg(input_cfg_file, timecode):
 
 def main():
     print("main is called")
-    #json_path = os.path.dirname(os.path.abspath(__file__))+"/media.json"
     json_path = "media.json"
     medias = load_json(json_path)
 
